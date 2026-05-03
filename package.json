@@ -1,0 +1,28 @@
+{
+  "name": "share-the-spire-uploader",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Cross-platform Electron desktop app that watches Slay the Spire 2 save files and uploads them to sharethespire.com.",
+  "license": "MIT",
+  "main": "dist/main/index.js",
+  "scripts": {
+    "build": "npm run build:main && npm run build:renderer",
+    "build:main": "tsc -p tsconfig.json",
+    "build:renderer": "tsc -p tsconfig.renderer.json",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "start": "npm run build && electron .",
+    "dev": "npm run build && electron .",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.renderer.json --noEmit"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "electron": "^41.1.1",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
+  }
+}

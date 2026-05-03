@@ -1,0 +1,123 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: Canvas;
+  color: CanvasText;
+}
+
+main {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+h1 {
+  font-size: 1.4rem;
+  margin: 0 0 4px;
+}
+
+.muted {
+  opacity: 0.7;
+}
+
+.error {
+  color: #c0392b;
+}
+
+.status,
+section {
+  margin-top: 20px;
+}
+
+.user-card {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.user-card img {
+  border-radius: 50%;
+}
+
+button {
+  appearance: none;
+  border: 1px solid color-mix(in srgb, CanvasText 25%, transparent);
+  background: color-mix(in srgb, CanvasText 5%, transparent);
+  color: inherit;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font: inherit;
+  cursor: pointer;
+}
+
+button:hover {
+  background: color-mix(in srgb, CanvasText 10%, transparent);
+}
+
+code {
+  background: color-mix(in srgb, CanvasText 8%, transparent);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.settings,
+.log-section {
+  margin-top: 28px;
+  border-top: 1px solid color-mix(in srgb, CanvasText 12%, transparent);
+  padding-top: 16px;
+}
+
+.settings h2,
+.log-section h2 {
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.7;
+  margin: 0 0 10px;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.log-box {
+  height: 160px;
+  overflow-y: auto;
+  background: color-mix(in srgb, CanvasText 6%, transparent);
+  border: 1px solid color-mix(in srgb, CanvasText 12%, transparent);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.log-line {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.log-time {
+  opacity: 0.55;
+}
+
+.log-msg {
+  opacity: 0.95;
+}

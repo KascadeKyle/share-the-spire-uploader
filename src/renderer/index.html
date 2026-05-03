@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; script-src 'self';"
+    />
+    <title>Share The Spire Uploader</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Share The Spire Uploader</h1>
+      </header>
+
+      <section id="status" class="status status--loading">
+        <p>Loading…</p>
+      </section>
+
+      <section id="signed-out" hidden>
+        <p>You're not signed in.</p>
+        <button id="sign-in-btn" type="button">Sign in with Discord</button>
+      </section>
+
+      <section id="signed-in" hidden>
+        <div class="user-card">
+          <img id="avatar" alt="" width="48" height="48" hidden />
+          <div>
+            <p>
+              Signed In. <a href="#" id="profile-link">View Your Profile And Saves</a>
+            </p>
+          </div>
+        </div>
+        <button id="sign-out-btn" type="button">Sign out</button>
+      </section>
+
+      <section id="error-state" hidden>
+        <p class="error" id="error-message"></p>
+        <button id="retry-btn" type="button">Try again</button>
+      </section>
+
+      <section id="settings" class="settings">
+        <h2>Settings</h2>
+        <label class="checkbox">
+          <input id="open-at-login" type="checkbox" />
+          <span>Start app automatically in background</span>
+        </label>
+      </section>
+
+      <section id="log-section" class="log-section">
+        <h2>Log</h2>
+        <div id="log-box" class="log-box" role="log" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <script type="module" src="../../dist/renderer/renderer.js"></script>
+  </body>
+</html>
