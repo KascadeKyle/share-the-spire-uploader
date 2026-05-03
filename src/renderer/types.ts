@@ -18,12 +18,18 @@ export type AuthState =
 
 export type UploaderSettings = {
   openAtLoginHidden: boolean;
+  autoInstallUpdates: boolean;
 };
 
 export type LogEntry = {
   ts: number;
   message: string;
 };
+
+export type UpdateStatus =
+  | { kind: "idle" }
+  | { kind: "downloading"; version: string; percent: number }
+  | { kind: "ready"; version: string };
 
 export type UploaderApi = {
   getAuthState: () => Promise<AuthState>;
@@ -33,12 +39,19 @@ export type UploaderApi = {
 
   getSettings: () => Promise<UploaderSettings>;
   setOpenAtLoginHidden: (value: boolean) => Promise<UploaderSettings>;
+  setAutoInstallUpdates: (value: boolean) => Promise<UploaderSettings>;
   onSettingsChanged: (
     listener: (settings: UploaderSettings) => void,
   ) => () => void;
 
   getLogBuffer: () => Promise<LogEntry[]>;
   onLogAppend: (listener: (entry: LogEntry) => void) => () => void;
+
+  getUpdateStatus: () => Promise<UpdateStatus>;
+  installUpdate: () => Promise<void>;
+  onUpdateStatusChanged: (
+    listener: (status: UpdateStatus) => void,
+  ) => () => void;
 
   openProfile: () => Promise<void>;
 };

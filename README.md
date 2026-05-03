@@ -12,6 +12,14 @@ Once you're signed in, the uploader runs quietly in the background and watches y
 
 The app lives in your **system tray** (the little icons next to the clock on Windows, or the menu bar on macOS). There's no main window taking up space on your taskbar — just a single tray icon doing its thing while you play.
 
+## Download
+
+Grab the latest installer from the [GitHub Releases page](https://github.com/KascadeKyle/share-the-spire-uploader/releases) — it's a single `Share The Spire Uploader-Setup-x.y.z.exe`. Run it, follow the prompts, and the app will install per-user (no admin needed) and create Start-menu and desktop shortcuts.
+
+The first time you run an unsigned installer, Windows SmartScreen may show a *"Windows protected your PC"* dialog. Click **More info → Run anyway**.
+
+Updates are downloaded automatically in the background, but **nothing is installed without your consent**. When a new version is ready, an *Update ready* banner appears at the top of the window with an **Install and restart** button — you decide when to apply it. If you'd rather not be bothered, the *Install updates automatically when I quit the app* setting flips updates to silent install on next quit.
+
 ## Getting started
 
 1. **Open the app.** The first time you launch it, a small setup window appears with a *Sign in with Discord* button. After that, the app lives in the tray.
@@ -91,6 +99,26 @@ This builds the TypeScript sources and launches Electron. By default it talks to
 | `npm run typecheck` | Run TypeScript with `--noEmit` over both projects. |
 | `npm run clean` | Delete the `dist/` directory. |
 | `npm run start` | Build, then launch Electron (alias of `dev`). |
+| `npm run pack` | Package the app into `release/win-unpacked/` without producing an installer (fast smoke-test of a packaged build). |
+| `npm run dist` | Build a full NSIS installer in `release/` (no upload). |
+| `npm run release` | Build *and* publish to GitHub Releases. Requires `GH_TOKEN` in the environment. |
+
+### Packaging & releases
+
+Distribution is handled by [`electron-builder`](https://www.electron.build/) and the configuration lives in the `build` block of `package.json`. Releases are produced on Windows and uploaded to [GitHub Releases](https://github.com/KascadeKyle/share-the-spire-uploader/releases). The auto-updater (`electron-updater`) reads from the same release feed.
+
+**Required asset** — add a real Windows icon to `images/icon.ico` (256×256 multi-resolution `.ico`) before producing a release build. Without it, `electron-builder` will fail. The same `images/` folder is also where the runtime tray/window PNG icons live — drop in `share-the-spire-32.png` and `share-the-spire-64.png` to replace the synthetic purple-square fallback.
+
+**Cutting a release:**
+
+1. Bump `version` in `package.json` and commit.
+2. Tag the commit: `git tag v0.1.1 && git push origin v0.1.1`.
+3. The `Release` GitHub Actions workflow (`.github/workflows/release.yml`) runs on `windows-latest`, builds the installer, and uploads it to a **draft** release together with the `latest.yml` metadata file the auto-updater needs.
+4. Open the draft on GitHub, edit the release notes, and click **Publish release**. The auto-updater only sees published (non-draft) releases, so this acts as a manual gate.
+
+To build locally without publishing, run `npm run dist` and look in `release/`. To build *and* publish from your machine instead of CI, set `GH_TOKEN` to a personal access token with `repo` scope and run `npm run release`.
+
+**Code signing** is currently *not* configured, so installer downloads will trip Windows SmartScreen until enough users vouch for the binary. To enable signing later, set the `WIN_CSC_LINK` and `WIN_CSC_KEY_PASSWORD` env vars in the workflow — `electron-builder` picks them up automatically.
 
 ### Project layout
 

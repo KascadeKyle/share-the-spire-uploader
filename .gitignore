@@ -1,6 +1,10 @@
 # Build output
 dist/
 
+# Packaged installers (electron-builder output)
+release/
+out/
+
 # Dependencies
 node_modules/
 

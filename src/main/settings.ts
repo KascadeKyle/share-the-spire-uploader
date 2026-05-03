@@ -11,6 +11,7 @@ export const HIDDEN_ARG = "--hidden";
 
 const DEFAULTS: UploaderSettings = {
   openAtLoginHidden: false,
+  autoInstallUpdates: false,
 };
 
 /** Read the persisted settings file or return defaults if it doesn't exist. */

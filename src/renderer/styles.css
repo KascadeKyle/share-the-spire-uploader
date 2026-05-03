@@ -97,6 +97,53 @@ code {
   cursor: pointer;
 }
 
+.checkbox + .checkbox {
+  margin-top: 8px;
+}
+
+.setting-hint {
+  margin: 6px 0 0 24px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.update-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: color-mix(in srgb, #8e54e9 18%, transparent);
+  border: 1px solid color-mix(in srgb, #8e54e9 45%, transparent);
+}
+
+/* Class selectors win over the UA stylesheet's `[hidden] { display: none }`,
+   so we have to re-assert it explicitly for any flex/grid section above. */
+.update-banner[hidden] {
+  display: none;
+}
+
+.update-banner__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.update-banner__text strong {
+  font-size: 0.95rem;
+}
+
+.update-banner__text span {
+  font-size: 0.82rem;
+}
+
+.update-banner button {
+  flex-shrink: 0;
+}
+
 .log-box {
   height: 160px;
   overflow-y: auto;

@@ -1,0 +1,44 @@
+name: Release
+
+# Tag a new version (e.g. `git tag v0.1.0 && git push origin v0.1.0`) to
+# trigger a Windows build and upload the installer to a draft GitHub Release.
+# Review the generated release notes, then publish the draft so users can
+# download it (and so electron-updater starts offering the upgrade).
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: Build & publish to GitHub Releases
+        run: npm run release
+        env:
+          # electron-builder picks this up to authenticate against the
+          # repo's Releases API. The default `GITHUB_TOKEN` issued to the
+          # workflow has `contents: write` thanks to the `permissions`
+          # block above.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -28,4 +28,20 @@ export type LogEntry = {
 /** Persisted user preferences. */
 export type UploaderSettings = {
   openAtLoginHidden: boolean;
+  /**
+   * When true, downloaded updates install silently the next time the user
+   * quits the app. When false (the default), the user must explicitly click
+   * "Install and restart" in the update banner — no version reaches their
+   * machine without consent.
+   */
+  autoInstallUpdates: boolean;
 };
+
+/**
+ * Current state of the in-app update flow, broadcast by the main process
+ * so the renderer can show / hide its "update available" banner.
+ */
+export type UpdateStatus =
+  | { kind: "idle" }
+  | { kind: "downloading"; version: string; percent: number }
+  | { kind: "ready"; version: string };

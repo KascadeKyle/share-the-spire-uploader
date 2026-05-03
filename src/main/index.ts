@@ -10,6 +10,7 @@ import {
   launchedHidden,
   loadSettings,
 } from "./settings";
+import { setupAutoUpdater } from "./updater";
 import { SaveWatcher } from "./watcher/save-watcher";
 import { WindowManager } from "./window/manager";
 import { TrayManager } from "./window/tray";
@@ -37,7 +38,17 @@ const tray = new TrayManager(windowManager, {
   },
 });
 
-let currentSettings: UploaderSettings = { openAtLoginHidden: false };
+let currentSettings: UploaderSettings = {
+  openAtLoginHidden: false,
+  autoInstallUpdates: false,
+};
+
+const updater = setupAutoUpdater({
+  logger,
+  getAutoInstall: () => currentSettings.autoInstallUpdates,
+  onStatusChange: (status) =>
+    windowManager.broadcast("update:statusChanged", status),
+});
 
 logger.subscribe((entry) => windowManager.broadcast("log:append", entry));
 
@@ -50,6 +61,7 @@ auth.onChange(async (state) => {
 registerIpcHandlers({
   logger,
   auth,
+  updater,
   getSettings: () => currentSettings,
   setSettings: async (next) => {
     currentSettings = next;

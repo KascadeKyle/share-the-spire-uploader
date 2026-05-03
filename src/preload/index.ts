@@ -3,6 +3,7 @@ import { contextBridge, ipcRenderer } from "electron";
 import type {
   AuthState,
   LogEntry,
+  UpdateStatus,
   UploaderSettings,
 } from "../shared/types";
 
@@ -23,12 +24,20 @@ const api = {
   getSettings: (): Promise<UploaderSettings> => ipcRenderer.invoke("settings:get"),
   setOpenAtLoginHidden: (value: boolean): Promise<UploaderSettings> =>
     ipcRenderer.invoke("settings:setOpenAtLoginHidden", value),
+  setAutoInstallUpdates: (value: boolean): Promise<UploaderSettings> =>
+    ipcRenderer.invoke("settings:setAutoInstallUpdates", value),
   onSettingsChanged: (listener: (settings: UploaderSettings) => void): (() => void) =>
     subscribe("settings:changed", listener),
 
   getLogBuffer: (): Promise<LogEntry[]> => ipcRenderer.invoke("log:getBuffer"),
   onLogAppend: (listener: (entry: LogEntry) => void): (() => void) =>
     subscribe("log:append", listener),
+
+  getUpdateStatus: (): Promise<UpdateStatus> => ipcRenderer.invoke("update:getStatus"),
+  installUpdate: (): Promise<void> => ipcRenderer.invoke("update:install"),
+  onUpdateStatusChanged: (
+    listener: (status: UpdateStatus) => void,
+  ): (() => void) => subscribe("update:statusChanged", listener),
 
   openProfile: (): Promise<void> => ipcRenderer.invoke("profile:open"),
 };

@@ -15,6 +15,16 @@
         <h1>Share The Spire Uploader</h1>
       </header>
 
+      <section id="update-banner" class="update-banner" hidden>
+        <div class="update-banner__text">
+          <strong id="update-banner-title">Update ready</strong>
+          <span id="update-banner-message" class="muted"></span>
+        </div>
+        <button id="update-install-btn" type="button">
+          Install and restart
+        </button>
+      </section>
+
       <section id="status" class="status status--loading">
         <p>Loading…</p>
       </section>
@@ -47,6 +57,15 @@
           <input id="open-at-login" type="checkbox" />
           <span>Start app automatically in background</span>
         </label>
+        <label class="checkbox">
+          <input id="auto-install-updates" type="checkbox" />
+          <span>Install updates automatically when I quit the app</span>
+        </label>
+        <p class="setting-hint muted">
+          When off (default), downloaded updates wait for you to click
+          <em>Install and restart</em> — no new version is applied without
+          your consent.
+        </p>
       </section>
 
       <section id="log-section" class="log-section">
