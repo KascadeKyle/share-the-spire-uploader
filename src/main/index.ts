@@ -7,8 +7,10 @@ import { registerIpcHandlers } from "./ipc/handlers";
 import { Logger } from "./logger";
 import {
   applyAutoLaunch,
+  getOsAutoLaunchEnabled,
   launchedHidden,
   loadSettings,
+  saveSettings,
 } from "./settings";
 import { setupAutoUpdater } from "./updater";
 import { SaveWatcher } from "./watcher/save-watcher";
@@ -98,6 +100,22 @@ app.whenReady().then(async () => {
 
   currentSettings = await loadSettings();
   applyAutoLaunch(currentSettings.openAtLoginHidden);
+
+  // Reconcile the persisted preference with what the OS actually has
+  // registered. If Windows silently dropped the entry (e.g. via Startup
+  // Apps), update settings so the renderer's checkbox tells the truth.
+  const osAutoLaunch = getOsAutoLaunchEnabled();
+  logger.append(
+    `Auto-start at login: setting=${currentSettings.openAtLoginHidden}, ` +
+      `OS=${osAutoLaunch}, exe=${process.execPath}`,
+  );
+  if (currentSettings.openAtLoginHidden !== osAutoLaunch) {
+    logger.append(
+      `Auto-start drift detected — updating saved setting to match OS (${osAutoLaunch}).`,
+    );
+    currentSettings = { ...currentSettings, openAtLoginHidden: osAutoLaunch };
+    await saveSettings(currentSettings);
+  }
 
   await auth.hydrate();
   tray.setup();

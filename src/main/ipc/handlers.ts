@@ -3,7 +3,7 @@ import { ipcMain, shell } from "electron";
 import type { AuthController } from "../auth/controller";
 import { FRONTEND_URL } from "../config";
 import type { Logger } from "../logger";
-import { applyAutoLaunch, saveSettings } from "../settings";
+import { applyAutoLaunch, getOsAutoLaunchEnabled, saveSettings } from "../settings";
 import type { Updater } from "../updater";
 import type {
   AuthState,
@@ -39,17 +39,31 @@ export function registerIpcHandlers(deps: IpcDeps): void {
   ipcMain.handle(
     "settings:setOpenAtLoginHidden",
     async (_e, value: boolean): Promise<UploaderSettings> => {
+      const requested = !!value;
+      applyAutoLaunch(requested);
+
+      // Trust the OS, not our hope. If Windows refused (e.g. Startup Apps
+      // disabled the entry), the checkbox should reflect reality.
+      const actual = getOsAutoLaunchEnabled();
       const next: UploaderSettings = {
         ...getSettings(),
-        openAtLoginHidden: !!value,
+        openAtLoginHidden: actual,
       };
       await saveSettings(next);
-      applyAutoLaunch(next.openAtLoginHidden);
-      logger.append(
-        next.openAtLoginHidden
-          ? "Auto-start at login enabled (hidden)."
-          : "Auto-start at login disabled.",
-      );
+
+      if (actual === requested) {
+        logger.append(
+          actual
+            ? "Auto-start at login enabled (hidden)."
+            : "Auto-start at login disabled.",
+        );
+      } else {
+        logger.append(
+          `Auto-start change did not stick: requested=${requested}, OS=${actual}. ` +
+            `Check Task Manager > Startup apps for "Share The Spire Uploader".`,
+        );
+      }
+
       await setSettings(next);
       return next;
     },

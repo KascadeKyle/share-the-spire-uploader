@@ -39,13 +39,40 @@ export async function saveSettings(settings: UploaderSettings): Promise<void> {
  * When `openAtLoginHidden` is true, the app is registered to launch at
  * login with the `--hidden` arg so the entry point knows not to show the
  * window.
+ *
+ * On Windows we pass `path` and `args` explicitly so that subsequent
+ * `getLoginItemSettings({path, args})` calls can match the entry — without
+ * a matching path/args pair, Windows reports `openAtLogin: false` even when
+ * the registry entry exists.
  */
 export function applyAutoLaunch(openAtLoginHidden: boolean): void {
-  app.setLoginItemSettings({
+  const options: Parameters<typeof app.setLoginItemSettings>[0] = {
     openAtLogin: openAtLoginHidden,
-    openAsHidden: openAtLoginHidden,
+    path: process.execPath,
     args: openAtLoginHidden ? [HIDDEN_ARG] : [],
-  });
+  };
+  // `openAsHidden` is a macOS-only option; passing it on other platforms is
+  // a no-op but we keep the payload clean.
+  if (process.platform === "darwin") {
+    options.openAsHidden = openAtLoginHidden;
+  }
+  app.setLoginItemSettings(options);
+}
+
+/**
+ * Read the OS-level auto-launch state for this app. Pass the same `path`
+ * and `args` we registered with so Windows can locate the entry — see
+ * the comment in `applyAutoLaunch` above.
+ */
+export function getOsAutoLaunchEnabled(): boolean {
+  try {
+    return app.getLoginItemSettings({
+      path: process.execPath,
+      args: [HIDDEN_ARG],
+    }).openAtLogin;
+  } catch {
+    return false;
+  }
 }
 
 /**
