@@ -1,7 +1,7 @@
 {
   "name": "share-the-spire-uploader",
   "productName": "Share The Spire Uploader",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Cross-platform Electron desktop app that watches Slay the Spire 2 save files and uploads them to sharethespire.com.",
   "author": {
@@ -65,7 +65,9 @@
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ],
       "icon": "images/icon.ico",
